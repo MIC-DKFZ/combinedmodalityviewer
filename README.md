@@ -10,7 +10,7 @@
 
 ## Demo
 
-![Demo — Combined Modality Viewer in action](Readme/demo.mp4)
+<video src="Readme/demo.mp4" width="100%" controls></video>
 
 ---
 
