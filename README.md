@@ -10,7 +10,7 @@
 
 ## Demo
 
-![Demo — Combined Modality Viewer in action](Readme/demo.mp4)
+![Demo — Combined Modality Viewer in action](Readme/demo.gif)
 
 ---
 
