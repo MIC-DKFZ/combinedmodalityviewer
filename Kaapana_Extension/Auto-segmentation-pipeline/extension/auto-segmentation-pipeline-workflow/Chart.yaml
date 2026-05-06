@@ -1,0 +1,11 @@
+---
+apiVersion: v1
+appVersion: "v1.5.5"
+description: "Execute Auto Segmentation Pipeline with a pre-selected list of tasks"
+name: auto-segmentation-pipeline-workflow
+version: "0.0.0"
+keywords:
+- kaapanaworkflow
+annotations:
+  documentation: "user_guide/extensions.html#totalsegmentator"
+  ui-visible-name: "Auto Segmentation Pipeline"

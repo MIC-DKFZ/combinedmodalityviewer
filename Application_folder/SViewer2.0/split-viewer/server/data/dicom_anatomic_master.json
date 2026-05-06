@@ -1,0 +1,1014 @@
+{
+  "dicom_anatomic_master": {
+    "CID_4030": {
+      "title": "CT, MR and PET Anatomy Imaged",
+      "keyword": "CTMRandPETAnatomyImaged",
+      "fhir_keyword": "dicom-cid-4030-CTMRandPETAnatomyImaged",
+      "type": "Extensible",
+      "version": "20170914",
+      "uid": "1.2.840.10008.6.1.307",
+      "table": [
+        {
+          "row_type": "include",
+          "include_cid": "4031",
+          "include_name": "Common Anatomic Region"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "7832008",
+          "code_meaning": "Abdominal aorta",
+          "snomed_rt_id": "T-42500",
+          "umls_cui": "C0003484"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "23451007",
+          "code_meaning": "Adrenal gland",
+          "snomed_rt_id": "T-B3000",
+          "umls_cui": "C0001625"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "57034009",
+          "code_meaning": "Aortic arch",
+          "snomed_rt_id": "T-42300",
+          "umls_cui": "C0003489"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "12738006",
+          "code_meaning": "Brain",
+          "snomed_rt_id": "T-A0100",
+          "umls_cui": "C0006104"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "69105007",
+          "code_meaning": "Carotid Artery",
+          "snomed_rt_id": "T-45010",
+          "umls_cui": "C0007272"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "113305005",
+          "code_meaning": "Cerebellum",
+          "snomed_rt_id": "T-A6000",
+          "umls_cui": "C0007765"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "11279006",
+          "code_meaning": "Circle of Willis",
+          "snomed_rt_id": "T-45520",
+          "umls_cui": "C0008812"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "41801008",
+          "code_meaning": "Coronary artery",
+          "snomed_rt_id": "T-43000",
+          "umls_cui": "C0205042"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "128320002",
+          "code_meaning": "Cranial venous system",
+          "snomed_rt_id": "T-A0191",
+          "umls_cui": "C0447118"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "299716001",
+          "code_meaning": "Iliac and/or femoral artery",
+          "snomed_rt_id": "T-41068",
+          "umls_cui": "C0576469"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "64033007",
+          "code_meaning": "Kidney",
+          "snomed_rt_id": "T-71000",
+          "umls_cui": "C0022646"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "10200004",
+          "code_meaning": "Liver",
+          "snomed_rt_id": "T-62000",
+          "umls_cui": "C0023884"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "111002",
+          "code_meaning": "Parathyroid",
+          "snomed_rt_id": "T-B7000",
+          "umls_cui": "C0030518"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "81040000",
+          "code_meaning": "Pulmonary artery",
+          "snomed_rt_id": "T-44000",
+          "umls_cui": "C0034052"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "2841007",
+          "code_meaning": "Renal artery",
+          "snomed_rt_id": "T-46600",
+          "umls_cui": "C0035065"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "78961009",
+          "code_meaning": "Spleen",
+          "snomed_rt_id": "T-C3000",
+          "umls_cui": "C0037993"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "40689003",
+          "code_meaning": "Testis",
+          "snomed_rt_id": "T-94000",
+          "umls_cui": "C0039597"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "113262008",
+          "code_meaning": "Thoracic aorta",
+          "snomed_rt_id": "T-42070",
+          "umls_cui": "C1522460"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "9875009",
+          "code_meaning": "Thymus",
+          "snomed_rt_id": "T-C8000",
+          "umls_cui": "C0040113"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "69748006",
+          "code_meaning": "Thyroid",
+          "snomed_rt_id": "T-B6000",
+          "umls_cui": "C0040132"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "35039007",
+          "code_meaning": "Uterus",
+          "snomed_rt_id": "T-83000",
+          "umls_cui": "C0042149"
+        }
+      ]
+    },
+    "CID_4031": {
+      "title": "Common Anatomic Region",
+      "keyword": "CommonAnatomicRegion",
+      "fhir_keyword": "dicom-cid-4031-CommonAnatomicRegion",
+      "type": "Extensible",
+      "version": "20250709",
+      "uid": "1.2.840.10008.6.1.308",
+      "table": [
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "818981001",
+          "code_meaning": "Abdomen",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "818982008",
+          "code_meaning": "Abdomen and Pelvis",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "85856004",
+          "code_meaning": "Acromioclavicular joint",
+          "snomed_rt_id": "T-15420",
+          "umls_cui": "C0001208"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "70258002",
+          "code_meaning": "Ankle joint",
+          "snomed_rt_id": "T-15750",
+          "umls_cui": "C0003087"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "53505006",
+          "code_meaning": "Anus",
+          "snomed_rt_id": "T-59900",
+          "umls_cui": "C0003461"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "86598002",
+          "code_meaning": "Apex of Lung",
+          "snomed_rt_id": "T-280A0",
+          "umls_cui": "C0225703"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "28273000",
+          "code_meaning": "Bile duct",
+          "snomed_rt_id": "T-60610",
+          "umls_cui": "C0005400"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "34707002",
+          "code_meaning": "Biliary tract",
+          "snomed_rt_id": "T-60600",
+          "umls_cui": "C0005423"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "89837001",
+          "code_meaning": "Bladder",
+          "snomed_rt_id": "T-74000",
+          "umls_cui": "C0005682"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "72001000",
+          "code_meaning": "Bone of lower limb",
+          "snomed_rt_id": "T-12700",
+          "umls_cui": "C0448188"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "371195002",
+          "code_meaning": "Bone of upper limb",
+          "snomed_rt_id": "T-D0821",
+          "umls_cui": "C0003793"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "76752008",
+          "code_meaning": "Breast",
+          "snomed_rt_id": "T-04000",
+          "umls_cui": "C0006141"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "955009",
+          "code_meaning": "Bronchus",
+          "snomed_rt_id": "T-26000",
+          "umls_cui": "C0006255"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "80144004",
+          "code_meaning": "Calcaneus",
+          "snomed_rt_id": "T-12770",
+          "umls_cui": "C0006655"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "113257007",
+          "code_meaning": "Cardiovascular system",
+          "snomed_rt_id": "T-30000",
+          "umls_cui": "C0007226"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "122494005",
+          "code_meaning": "Cervical spine",
+          "snomed_rt_id": "T-11501",
+          "umls_cui": "C0728985"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "1217257000",
+          "code_meaning": "Cervico-thoracic spine",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "816094009",
+          "code_meaning": "Chest",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "416775004",
+          "code_meaning": "Chest, Abdomen and Pelvis",
+          "snomed_rt_id": "R-FAB56",
+          "umls_cui": "C1562547"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "416550000",
+          "code_meaning": "Chest and Abdomen",
+          "snomed_rt_id": "R-FAB55",
+          "umls_cui": "C1442171"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "51299004",
+          "code_meaning": "Clavicle",
+          "snomed_rt_id": "T-12310",
+          "umls_cui": "C0008913"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "64688005",
+          "code_meaning": "Coccyx",
+          "snomed_rt_id": "T-11BF0",
+          "umls_cui": "C0009194"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "71854001",
+          "code_meaning": "Colon",
+          "snomed_rt_id": "T-59300",
+          "umls_cui": "C0009368"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "79741001",
+          "code_meaning": "Common bile duct",
+          "snomed_rt_id": "T-64500",
+          "umls_cui": "C0009437"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "38848004",
+          "code_meaning": "Duodenum",
+          "snomed_rt_id": "T-58200",
+          "umls_cui": "C0013303"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "16953009",
+          "code_meaning": "Elbow joint",
+          "snomed_rt_id": "T-15430",
+          "umls_cui": "C0013770"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "38266002",
+          "code_meaning": "Entire body",
+          "snomed_rt_id": "T-D0010",
+          "umls_cui": "C0229960"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "32849002",
+          "code_meaning": "Esophagus",
+          "snomed_rt_id": "T-56000",
+          "umls_cui": "C0014876"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "110861005",
+          "code_meaning": "Esophagus, stomach and duodenum",
+          "snomed_rt_id": "T-DD163",
+          "umls_cui": "C1268410"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "66019005",
+          "code_meaning": "Extremity",
+          "snomed_rt_id": "T-D0300",
+          "umls_cui": "C0015385"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "81745001",
+          "code_meaning": "Eye",
+          "snomed_rt_id": "T-AA000",
+          "umls_cui": "C0015392"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "371398005",
+          "code_meaning": "Eye region",
+          "snomed_rt_id": "T-D0801",
+          "umls_cui": "C0700042"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "91397008",
+          "code_meaning": "Facial bones",
+          "snomed_rt_id": "T-11196",
+          "umls_cui": "C0015455"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "71341001",
+          "code_meaning": "Femur",
+          "snomed_rt_id": "T-12710",
+          "umls_cui": "C0015811"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "87342007",
+          "code_meaning": "Fibula",
+          "snomed_rt_id": "T-12750",
+          "umls_cui": "C0016068"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "7569003",
+          "code_meaning": "Finger",
+          "snomed_rt_id": "T-D8800",
+          "umls_cui": "C0016129"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "56459004",
+          "code_meaning": "Foot",
+          "snomed_rt_id": "T-D9700",
+          "umls_cui": "C0016504"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "14975008",
+          "code_meaning": "Forearm",
+          "snomed_rt_id": "T-D8500",
+          "umls_cui": "C0016536"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "28231008",
+          "code_meaning": "Gallbladder",
+          "snomed_rt_id": "T-63000",
+          "umls_cui": "C0016976"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "85562004",
+          "code_meaning": "Hand",
+          "snomed_rt_id": "T-D8700",
+          "umls_cui": "C0018563"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "69536005",
+          "code_meaning": "Head",
+          "snomed_rt_id": "T-D1100",
+          "umls_cui": "C0018670"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "774007",
+          "code_meaning": "Head and Neck",
+          "snomed_rt_id": "T-D1000",
+          "umls_cui": "C0460004"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "80891009",
+          "code_meaning": "Heart",
+          "snomed_rt_id": "T-32000",
+          "umls_cui": "C0018787"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "29836001",
+          "code_meaning": "Hip",
+          "snomed_rt_id": "T-D2500",
+          "umls_cui": "C0019552"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "24136001",
+          "code_meaning": "Hip Joint",
+          "snomed_rt_id": "T-15710",
+          "umls_cui": "C0019558"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "85050009",
+          "code_meaning": "Humerus",
+          "snomed_rt_id": "T-12410",
+          "umls_cui": "C0020164"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "34516001",
+          "code_meaning": "Ileum",
+          "snomed_rt_id": "T-58600",
+          "umls_cui": "C0020885"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "22356005",
+          "code_meaning": "Ilium",
+          "snomed_rt_id": "T-12340",
+          "umls_cui": "C0020889"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "361078006",
+          "code_meaning": "Internal Auditory Canal",
+          "snomed_rt_id": "T-AB959",
+          "umls_cui": "C1283773"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "661005",
+          "code_meaning": "Jaw region",
+          "snomed_rt_id": "T-D1213",
+          "umls_cui": "C0022359"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "21306003",
+          "code_meaning": "Jejunum",
+          "snomed_rt_id": "T-58400",
+          "umls_cui": "C0022378"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "72696002",
+          "code_meaning": "Knee",
+          "snomed_rt_id": "T-D9200",
+          "umls_cui": "C0022742"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "14742008",
+          "code_meaning": "Large intestine",
+          "snomed_rt_id": "T-59000",
+          "umls_cui": "C0021851"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "4596009",
+          "code_meaning": "Larynx",
+          "snomed_rt_id": "T-24100",
+          "umls_cui": "C0023078"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "303270005",
+          "code_meaning": "Liver and biliary structure",
+          "snomed_rt_id": "T-50007",
+          "umls_cui": "C0580674"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "30021000",
+          "code_meaning": "Lower leg",
+          "snomed_rt_id": "T-D9400",
+          "umls_cui": "C1140621"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "61685007",
+          "code_meaning": "Lower limb",
+          "snomed_rt_id": "T-D9000",
+          "umls_cui": "C0023216"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "63337009",
+          "code_meaning": "Lower trunk",
+          "snomed_rt_id": "T-D2020",
+          "umls_cui": "C0230094"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "122496007",
+          "code_meaning": "Lumbar spine",
+          "snomed_rt_id": "T-11503",
+          "umls_cui": "C0024091"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "1217253001",
+          "code_meaning": "Lumbo-sacral spine",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "91609006",
+          "code_meaning": "Mandible",
+          "snomed_rt_id": "T-11180",
+          "umls_cui": "C0024687"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "59066005",
+          "code_meaning": "Mastoid bone",
+          "snomed_rt_id": "T-11133",
+          "umls_cui": "C0446908"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "70925003",
+          "code_meaning": "Maxilla",
+          "snomed_rt_id": "T-11170",
+          "umls_cui": "C0024947"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "72410000",
+          "code_meaning": "Mediastinum",
+          "snomed_rt_id": "T-D3300",
+          "umls_cui": "C0025066"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "102292000",
+          "code_meaning": "Muscle of lower limb",
+          "snomed_rt_id": "T-14668",
+          "umls_cui": "C0584890"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "30608006",
+          "code_meaning": "Muscle of upper limb",
+          "snomed_rt_id": "T-13600",
+          "umls_cui": "C0559498"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "74386004",
+          "code_meaning": "Nasal bone",
+          "snomed_rt_id": "T-11149",
+          "umls_cui": "C0027422"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "45048000",
+          "code_meaning": "Neck",
+          "snomed_rt_id": "T-D1600",
+          "umls_cui": "C0027530"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "416319003",
+          "code_meaning": "Neck, Chest, Abdomen and Pelvis",
+          "snomed_rt_id": "R-FAB54",
+          "umls_cui": "C1562776"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "416152001",
+          "code_meaning": "Neck, Chest and Abdomen",
+          "snomed_rt_id": "R-FAB53",
+          "umls_cui": "C1562378"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "417437006",
+          "code_meaning": "Neck and Chest",
+          "snomed_rt_id": "R-FAB52",
+          "umls_cui": "C1562459"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "55024004",
+          "code_meaning": "Optic canal",
+          "snomed_rt_id": "T-11102",
+          "umls_cui": "C0450102"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "363654007",
+          "code_meaning": "Orbital structure",
+          "snomed_rt_id": "T-D14AE",
+          "umls_cui": "C0029180"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "15776009",
+          "code_meaning": "Pancreas",
+          "snomed_rt_id": "T-65000",
+          "umls_cui": "C0030274"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "69930009",
+          "code_meaning": "Pancreatic duct",
+          "snomed_rt_id": "T-65010",
+          "umls_cui": "C0030288"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "110621006",
+          "code_meaning": "Pancreatic duct and bile duct systems",
+          "snomed_rt_id": "T-65600",
+          "umls_cui": "C1267614"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "2095001",
+          "code_meaning": "Paranasal sinus",
+          "snomed_rt_id": "T-22000",
+          "umls_cui": "C0030471"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "45289007",
+          "code_meaning": "Parotid gland",
+          "snomed_rt_id": "T-61100",
+          "umls_cui": "C0030580"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "64234005",
+          "code_meaning": "Patella",
+          "snomed_rt_id": "T-12730",
+          "umls_cui": "C0030647"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "816092008",
+          "code_meaning": "Pelvis",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "1231522001",
+          "code_meaning": "Pelvis and lower extremities",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "706342009",
+          "code_meaning": "Phantom",
+          "snomed_rt_id": null,
+          "umls_cui": "C0282611"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "41216001",
+          "code_meaning": "Prostate",
+          "snomed_rt_id": "T-92000",
+          "umls_cui": "C0033572"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "34402009",
+          "code_meaning": "Rectum",
+          "snomed_rt_id": "T-59600",
+          "umls_cui": "C0034896"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "113197003",
+          "code_meaning": "Rib",
+          "snomed_rt_id": "T-11300",
+          "umls_cui": "C0035561"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "1217254007",
+          "code_meaning": "Sacro-coccygeal Spine",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "39723000",
+          "code_meaning": "Sacroiliac joint",
+          "snomed_rt_id": "T-15680",
+          "umls_cui": "C0036036"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "54735007",
+          "code_meaning": "Sacrum",
+          "snomed_rt_id": "T-11AD0",
+          "umls_cui": "C0036037"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "79601000",
+          "code_meaning": "Scapula",
+          "snomed_rt_id": "T-12280",
+          "umls_cui": "C0036277"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "42575006",
+          "code_meaning": "Sella turcica",
+          "snomed_rt_id": "T-D1460",
+          "umls_cui": "C0036609"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "58742003",
+          "code_meaning": "Sesamoid bones of foot",
+          "snomed_rt_id": "T-12980",
+          "umls_cui": "C0278418"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "16982005",
+          "code_meaning": "Shoulder",
+          "snomed_rt_id": "T-D2220",
+          "umls_cui": "C0037004"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "89546000",
+          "code_meaning": "Skull",
+          "snomed_rt_id": "T-11100",
+          "umls_cui": "C0037303"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "30315005",
+          "code_meaning": "Small intestine",
+          "snomed_rt_id": "T-58000",
+          "umls_cui": "C0021852"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "421060004",
+          "code_meaning": "Spine",
+          "snomed_rt_id": "T-D04FF",
+          "umls_cui": "C0037949"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "737561001",
+          "code_meaning": "Spine and/or cord",
+          "snomed_rt_id": null,
+          "umls_cui": "C4545211"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "7844006",
+          "code_meaning": "Sternoclavicular joint",
+          "snomed_rt_id": "T-15610",
+          "umls_cui": "C0038291"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "56873002",
+          "code_meaning": "Sternum",
+          "snomed_rt_id": "T-11210",
+          "umls_cui": "C0038293"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "69695003",
+          "code_meaning": "Stomach",
+          "snomed_rt_id": "T-57000",
+          "umls_cui": "C0038351"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "54019009",
+          "code_meaning": "Submandibular gland",
+          "snomed_rt_id": "T-61300",
+          "umls_cui": "C0038556"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "27949001",
+          "code_meaning": "Tarsal joint",
+          "snomed_rt_id": "T-15770",
+          "umls_cui": "C0039318"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "53620006",
+          "code_meaning": "Temporomandibular joint",
+          "snomed_rt_id": "T-15290",
+          "umls_cui": "C0039493"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "68367000",
+          "code_meaning": "Thigh",
+          "snomed_rt_id": "T-D9100",
+          "umls_cui": "C0039866"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "122495006",
+          "code_meaning": "Thoracic spine",
+          "snomed_rt_id": "T-11502",
+          "umls_cui": "C0581269"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "1217256009",
+          "code_meaning": "Thoraco-lumbar spine",
+          "snomed_rt_id": null,
+          "umls_cui": null
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "76505004",
+          "code_meaning": "Thumb",
+          "snomed_rt_id": "T-D8810",
+          "umls_cui": "C0040067"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "29707007",
+          "code_meaning": "Toe",
+          "snomed_rt_id": "T-D9800",
+          "umls_cui": "C0040357"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "44567001",
+          "code_meaning": "Trachea",
+          "snomed_rt_id": "T-25000",
+          "umls_cui": "C0040578"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "22943007",
+          "code_meaning": "Trunk",
+          "snomed_rt_id": "T-D2000",
+          "umls_cui": "C0460005"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "40983000",
+          "code_meaning": "Upper arm",
+          "snomed_rt_id": "T-D8200",
+          "umls_cui": "C0446516"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "53120007",
+          "code_meaning": "Upper limb",
+          "snomed_rt_id": "T-D8000",
+          "umls_cui": "C1140618"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "67734004",
+          "code_meaning": "Upper trunk",
+          "snomed_rt_id": "T-D2010",
+          "umls_cui": "C0230093"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "431491007",
+          "code_meaning": "Upper urinary tract",
+          "snomed_rt_id": "T-7000B",
+          "umls_cui": "C2317509"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "87953007",
+          "code_meaning": "Ureter",
+          "snomed_rt_id": "T-73000",
+          "umls_cui": "C0041951"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "13648007",
+          "code_meaning": "Urethra",
+          "snomed_rt_id": "T-75000",
+          "umls_cui": "C0041967"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "110639002",
+          "code_meaning": "Uterus and fallopian tubes",
+          "snomed_rt_id": "T-88920",
+          "umls_cui": "C1267676"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "110517009",
+          "code_meaning": "Vertebral column and cranium",
+          "snomed_rt_id": "T-11011",
+          "umls_cui": "C1266914"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "74670003",
+          "code_meaning": "Wrist joint",
+          "snomed_rt_id": "T-15460",
+          "umls_cui": "C1322271"
+        },
+        {
+          "coding_scheme_designator": "SCT",
+          "code_value": "13881006",
+          "code_meaning": "Zygoma",
+          "snomed_rt_id": "T-11166",
+          "umls_cui": "C0043539"
+        }
+      ],
+      "notes": [
+        "In a prior version of this table, the code SRT: T-D1217 was specified for the concept 'Maxilla and mandible'. The use of this code conflicts with its assignment to another concept in SNOMED, and its use in this context is deprecated.",
+        "In a prior version of this table, the code SRT: T-D8300 was used for (16953009, SCT, 'Elbow joint'), SRT: T-12402 for (14975008, SCT, 'Forearm'), SRT: T-15710 for (24136001, SCT, 'Hip'), SRT: T-73800 for (87953007, SCT, 'Ureter'), and SRT: T-11167 for (13881006, SCT, 'Zygoma').",
+        "In a prior version of this Context Group, concepts were used that were not specific to the cross-sectional anatomy (including the full thickness of the body). Further, whether or not (113345001, SCT, 'Abdomen') included the pelvis or not was ambiguous, so more specific codes are now used."
+      ]
+    }
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "path": "/slim",
+  "servers": [
+    {
+      "id": "dcm4chee",
+      "url": "/dcm4chee-arc/aets/DCM4CHEE/rs",
+      "write": false
+    }
+  ]
+}

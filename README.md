@@ -1,93 +1,200 @@
-# CombinedModalityViewer
+# Bridging Radiology and Pathology
+## A DICOM-based Framework for Multimodal Mapping and Integrated Visualization
 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE.txt)
+[![DOI](https://img.shields.io/badge/DOI-10.1007%2F978--3--658--51100--5__62-green)](https://doi.org/10.1007/978-3-658-51100-5_62)
 
+> **Rijhwani et al., BVM 2026** — An interdisciplinary toolbox that bridges radiology and pathology imaging within a unified DICOM-based environment, deployable as a standalone tool or as a Kaapana extension.
 
-## Getting started
+---
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+## Demo
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+![Demo — Combined Modality Viewer in action](Readme/demo.mp4)
 
-## Add your files
+---
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+## Screenshots
+
+![Combined Modality Viewer — Split-screen interface showing radiology and pathology side by side](Readme/screenshot%20(1).jpg)
+
+---
+
+## Methodological Overview
+
+![Pipeline flowchart: from DICOM ingestion through organ segmentation to synchronized visualization](Readme/flowchart.jpeg)
+
+The framework addresses two fundamental requirements for multimodal image evaluation:
+
+1. **Modality mapping** — Whole slide images (WSIs) are converted to DICOM format using [wsi-dicomizer](https://github.com/imi-bigpicture/wsidicomizer) and spatially linked to their corresponding radiology images by resolving the anatomical region via [TotalSegmentator](https://github.com/wasserth/TotalSegmentator).
+2. **Synchronized visualization** — A split-screen web viewer embeds [OHIF](https://ohif.org/) (radiology) and [SLIM](https://github.com/ImagingDataCommons/slim) (pathology) in a single coherent interface, with interactive overlays that link directly to the corresponding pathology slide.
+
+All data is managed through a [dcm4chee](https://www.dcm4che.org/) PACS using standardized DICOM tags, making the pipeline fully reproducible and interoperable with existing medical imaging infrastructures.
+
+---
+
+## Key Features
+
+- **Split-screen viewer** — OHIF (radiology) and SLIM (pathology) unified in a single web interface
+- **Automated multimodal mapping** — TotalSegmentator derives organ context from WSIs and segments corresponding structures in radiology volumes
+- **DICOM-native** — Both modalities handled through dcm4chee PACS; WSI conversion via wsi-dicomizer
+- **Interactive overlays** — Radiology overlays link directly to the matched pathology slide
+- **Kaapana integration** — Available as a Kaapana extension with an Airflow-orchestrated auto-segmentation pipeline
+- **Standalone deployment** — Can be run independently via Docker Compose without a full Kaapana installation
+
+---
+
+## Repository Structure
 
 ```
-cd existing_repo
-git remote add origin https://git.dkfz.de/mic/personal/group6/personal-projects/combinedmodalityviewer.git
-git branch -M main
-git push -uf origin main
+combinedmodalityviewer/
+├── Application_folder/       # Split-screen viewer application (OHIF + SLIM + nginx + dcm4chee)
+│   └── SViewer2.0/
+│       ├── split-viewer/     # Vite/React wrapper combining both viewers
+│       └── Viewers/          # OHIF Viewers fork with DKFZ customizations
+├── Docker_Images/            # Pre-built Docker image tarballs and deployment notes
+├── Kaapana_Extension/        # Kaapana workflow extension (Helm chart + Airflow DAG)
+│   └── Auto-segmentation-pipeline/
+│       └── processing-containers/  # TotalSegmentator-based organ segmentation container
+├── Readme/                   # Demo video, screenshots, flowchart, and associated paper
+├── Report/                   # Full technical report (LaTeX source + compiled PDF)
+└── LICENSE.txt
 ```
 
-## Integrate with your tools
+---
 
-- [ ] [Set up project integrations](https://git.dkfz.de/mic/personal/group6/personal-projects/combinedmodalityviewer/-/settings/integrations)
+## Getting Started
 
-## Collaborate with your team
+Two deployment paths are available: **build from source** (recommended for development) or **use pre-built Docker images** (quickest setup).
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+### Option A — Build from Source
 
-Use the built-in continuous integration in GitLab.
+**Requirements:** Docker, Docker Compose, Git
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+**1. Clone this repository**
 
-***
+```bash
+git clone https://github.com/MIC-DKFZ/combinedmodalityviewer.git
+cd combinedmodalityviewer
+```
 
-# Editing this README
+**2. Clone and start the SLIM pathology viewer**
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+The [SLIM viewer](https://github.com/ImagingDataCommons/slim) must be cloned and started separately before the main stack:
 
-## Suggestions for a good README
+```bash
+git clone https://github.com/ImagingDataCommons/slim.git
+cd slim
+docker compose up -d --no-deps app
+cd ..
+```
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+**3. Start the main application stack**
 
-## Name
-Choose a self-explaining name for your project.
+Navigate to the Nginx + dcm4chee recipe and bring up all services:
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+```bash
+cd Application_folder/SViewer2.0/Viewers/platform/app/.recipes/Nginx-Dcm4chee
+docker compose up
+```
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+This starts the OHIF viewer, split-screen wrapper, split-server, dcm4chee PACS (LDAP + PostgreSQL + archive), and nginx reverse proxy. Once running, open [http://localhost](http://localhost) in your browser.
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+---
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+### Option B — Pre-built Docker Images
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+**Requirements:** Docker, Docker Compose
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+**1. Download the pre-built image tarball**
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Download `nginx-SPLITVIEWER-images.tar` from [hub.dkfz.de/f/108118972](https://hub.dkfz.de/f/108118972) and load it:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
+```bash
+docker load -i nginx-SPLITVIEWER-images.tar
+```
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+**2. Start the application stack**
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+```bash
+cd Application_folder/SViewer2.0/Viewers/platform/app/.recipes/Nginx-Dcm4chee
+docker compose up -d
+```
 
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
+Open [http://localhost](http://localhost) in your browser.
+
+> **Note:** The pre-built images are built for x86_64. If you need to migrate existing Postgres or LDAP data, back up and restore the respective Docker volumes before starting.
+
+---
+
+### Kaapana Extension (v0.5.2)
+
+For institutional deployments on a MicroK8s/Kubernetes cluster, the full Kaapana-based platform (including the automated organ-segmentation pipeline) can be deployed via the provided Helm script:
+
+```bash
+cd Application_folder/SViewer2.0
+bash deploy_platform_0.5.2.sh
+```
+
+The script runs preflight checks, pulls the Kaapana admin chart from the HZDR registry, handles version migrations, and installs all platform components.
+
+For detailed architecture, configuration options, and evaluation, see the technical report in [`Report/main.pdf`](Report/main.pdf).
+
+---
+
+## Paper
+
+This work was presented at **Bildverarbeitung für die Medizin (BVM) 2026**:
+
+> Nilesh P. Rijhwani, Titus J. Brinker, Neher Peter, Nolden Marco, Klaus Maier-Hein, Christoph Wies, Maximilian Fischer.
+> **Bridging Radiology and Pathology: A DICOM-based Framework for Multimodal Mapping and Integrated Visualization.**
+> In: Handels H. et al. (Hrsg.), *Bildverarbeitung für die Medizin 2026*, Informatik aktuell, Springer Fachmedien Wiesbaden, 2026.
+> https://doi.org/10.1007/978-3-658-51100-5_62
+
+The paper PDF is included in [`Readme/978-3-658-51100-5_62.pdf`](Readme/978-3-658-51100-5_62.pdf).
+
+---
+
+## Citation
+
+If you use this framework in your research, please cite:
+
+```bibtex
+@InProceedings{rijhwani2026bridging,
+  author    = {Rijhwani, Nilesh P. and Brinker, Titus J. and Peter, Neher
+               and Nolden, Marco and Maier-Hein, Klaus and Wies, Christoph
+               and Fischer, Maximilian},
+  title     = {Bridging Radiology and Pathology: {A} {DICOM}-based Framework
+               for Multimodal Mapping and Integrated Visualization},
+  booktitle = {Bildverarbeitung f{\"u}r die Medizin 2026},
+  editor    = {Handels, H. and others},
+  publisher = {Springer Fachmedien Wiesbaden GmbH},
+  year      = {2026},
+  doi       = {10.1007/978-3-658-51100-5_62},
+}
+```
+
+---
 
 ## License
-For open source projects, say how it is licensed.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+Copyright © 2025 Division of Medical Image Computing, German Cancer Research Center (DKFZ), Heidelberg, Germany.
+
+This project is licensed under the **Apache License 2.0** — see [`LICENSE.txt`](LICENSE.txt) for the full text.
+
+### Third-party licenses
+
+This framework integrates several open-source components, each governed by its own license. Users must comply with the individual licenses of all incorporated tools, including but not limited to:
+
+| Component | License |
+|-----------|---------|
+| [OHIF Viewers](https://github.com/OHIF/Viewers) | MIT |
+| [SLIM](https://github.com/ImagingDataCommons/slim) | Apache 2.0 |
+| [dcm4chee](https://www.dcm4che.org/) | LGPL 2.1 |
+| [TotalSegmentator](https://github.com/wasserth/TotalSegmentator) | Apache 2.0 |
+| [wsi-dicomizer](https://github.com/imi-bigpicture/wsidicomizer) | Apache 2.0 |
+| [Kaapana](https://github.com/kaapana/kaapana) | Apache 2.0 |
+
+The respective license texts are distributed with each component. By using this software, you agree to abide by all applicable third-party licenses in addition to the Apache 2.0 license of this repository.

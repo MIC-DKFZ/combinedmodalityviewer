@@ -1,0 +1,16 @@
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {section}{\numberline {2}Background and Objectives}{3}{section.2}%
+\contentsline {section}{\numberline {3}System Architecture Overview}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}PACS and DICOM Infrastructure}{4}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Viewer Stack}{4}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Processing Pipeline}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Project Milestones}{5}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Milestone M1: Baseline Infrastructure and Synthetic Dataset (end of April 2025)}{5}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Milestone M2: Split Viewer Prototype with Real Fused Data (end of June 2025)}{5}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Milestone M3: Dynamic Overlays and Interactive Linking (end of September 2025)}{5}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Milestone M4: Automated Pipeline Closure (end of October 2025)}{6}{subsection.4.4}%
+\contentsline {subsection}{\numberline {4.5}Milestone M5: Manuscript Draft and Kaapana Integration (end of December 2025)}{6}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Phase wise Work Description}{6}{section.5}%
+\contentsline {section}{\numberline {6}Synthesis of Technical Contributions}{17}{section.6}%
+\contentsline {section}{\numberline {7}Skills and Lessons Learned}{18}{section.7}%
+\contentsline {section}{\numberline {8}Conclusion and Future Work}{18}{section.8}%

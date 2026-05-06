@@ -1,0 +1,598 @@
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{hyperref}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{makeidx}
+
+\makeindex
+
+\setstretch{1.2}
+\setlist[itemize]{leftmargin=1.5em}
+\setlist[enumerate]{leftmargin=1.8em}
+
+\title{Technical Activity Report\\
+\large HEBE Student Research Assistant}
+\author{Nilesh Parshotam Rijhwani}
+\date{15 March 2025 to 31 December 2025}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+\begin{abstract}
+This document presents an academic style technical report of the work carried out in the HEBE Student Research Assistant position between mid March 2025 and the end of December 2025. The main objective of the work was to design, implement, and evaluate a DICOM\index{DICOM} based framework that bridges radiology and pathology imaging, supported by an integrated split viewer\index{split viewer} and an automated pipeline\index{pipelines} from raw data to interactive visualization. The report summarizes the scientific and engineering contributions in terms of system design, implementation, dataset curation, algorithmic integration, and platform level deployment, structured in phases of one to two weeks. In addition, it reflects on challenges, mitigation strategies, and skills acquired during the period, and highlights key project milestones\index{milestones}.
+\end{abstract}
+
+\section{Introduction}
+
+Modern oncological workflows increasingly rely on information coming from heterogeneous imaging modalities. Radiology provides volumetric context, while histopathology offers cellular level detail. However, the technical ecosystems that manage these modalities are often disjoint, both at the storage level (PACS\index{PACS} for radiology, proprietary WSI repositories for pathology) and at the visualization level (distinct viewers and user interfaces). This separation complicates multimodal reasoning for clinicians and researchers.
+
+The work in this report aims to close part of this gap by building a DICOM based framework that links radiology and pathology imaging using common identifiers and interoperable formats. The framework is realized as a split viewer that embeds the OHIF\index{OHIF} radiology viewer and the SLIM\index{SLIM} pathology viewer, driven by a shared PACS (dcm4chee\index{dcm4chee}), and further extended by an automated processing pipeline that leverages tools such as TotalSegmentator\index{TotalSegmentator} and DICOM SEG\index{DICOM SEG} conversions.
+
+The contributions span several layers:
+\begin{itemize}
+    \item Design and deployment of a local, yet realistic, DICOM infrastructure that can serve multimodal data.
+    \item Development of a split screen viewer with dynamic overlays\index{overlays} and interactive linking between radiology and pathology.
+    \item Construction and evaluation of synthetic and fused radiology histopathology datasets suitable for the task.
+    \item Implementation of an automated pipeline that starts from WSI data, derives anatomical context, segments the corresponding organ in radiology, and stores the results back into PACS.
+    \item Initial integration of the developed viewer and workflows into the Kaapana\index{Kaapana} platform.
+\end{itemize}
+
+The remainder of this report is structured as follows. Section~\ref{sec:background} provides background and objectives. Section~\ref{sec:architecture} summarizes the system architecture. Section~\ref{sec:milestones} outlines the major milestones of the project. Section~\ref{sec:phases} details the work in phases of one to two weeks, covering the entire period from March to December 2025. Section~\ref{sec:contrib} synthesizes the technical contributions. Section~\ref{sec:skills} discusses skills and lessons learned, and Section~\ref{sec:conclusion} concludes.
+
+\section{Background and Objectives}
+\label{sec:background}
+
+The starting point of this work was a set of existing technologies:
+\begin{itemize}
+    \item \textbf{OHIF}\index{OHIF}: an open source web based DICOM viewer widely used for radiology.
+    \item \textbf{SLIM}\index{SLIM}: a viewer for whole slide images, built to handle pathology workflows.
+    \item \textbf{dcm4chee}\index{dcm4chee}: an open source PACS that supports DICOM and DICOMweb interfaces.
+    \item \textbf{Kaapana}\index{Kaapana}: a platform for medical data processing and deployment, using containerized components.
+\end{itemize}
+
+Prior to the start of the position, I had already produced a basic setup combining OHIF, SLIM, and a DICOM to JPEG conversion system as part of my interview preparation. The research assistantship extended this work in several dimensions:
+\begin{enumerate}
+    \item From demonstration setups to a robust and reproducible infrastructure on institutional hardware.
+    \item From unlinked multi viewer scenarios to true linkage of radiology and pathology based on shared DICOM metadata.
+    \item From static visualization to interactive overlays and bidirectional navigation between modalities.
+    \item From manual processing steps to an automated pipeline that can be integrated into larger platforms such as Kaapana.
+\end{enumerate}
+
+The high level objectives were therefore:
+\begin{itemize}
+    \item To design a technically sound architecture that uses DICOM to represent both radiology and pathology images in a unified way.
+    \item To implement an integrated split viewer that allows users to explore matched radiology and pathology data side by side.
+    \item To build a pipeline that starts from WSI data, derives anatomical context, segments the corresponding organ in radiology, and stores the results back into PACS.
+    \item To document the framework and its evaluation in a publication quality manuscript.
+\end{itemize}
+
+\section{System Architecture Overview}
+\label{sec:architecture}
+
+Before going into the phase wise chronology, it is helpful to summarize the main architectural components.
+
+\subsection{PACS and DICOM Infrastructure}
+
+At the core of the system is a dcm4chee based PACS instance. It stores:
+\begin{itemize}
+    \item Radiology images (MRI, CT) in standard DICOM format.
+    \item Pathology images converted to WSI DICOM using appropriate tools.
+    \item Segmentation results in DICOM SEG format, linked to the original images.
+\end{itemize}
+
+Access to the PACS is primarily via DICOMweb (QIDO, WADO, STOW). The split viewer relies on QIDO queries to discover studies and series, and on WADO requests for pixel data. The automated pipeline uploads segmentations using STOW and verifies their availability through QIDO.
+
+\subsection{Viewer Stack}
+
+The visualization layer consists of:
+\begin{itemize}
+    \item \textbf{OHIF} for volumetric radiology data, extended with a custom extension for segmentation overlays and clickable regions.
+    \item \textbf{SLIM} for pathology WSIs, provided as an embeddable web application.
+    \item A \textbf{split viewer shell} implemented in React, which embeds OHIF and SLIM in two panes and orchestrates communication between them using URL parameters and custom messaging.
+\end{itemize}
+
+The split viewer is served behind NGINX together with dcm4chee and OHIF. It is designed so that selecting a segmentation region in the OHIF pane can trigger a corresponding action in the SLIM pane, such as loading the associated WSI study.
+
+\subsection{Processing Pipeline}
+
+The automated pipeline is implemented as a series of modular steps:
+\begin{enumerate}
+    \item Convert pathology data to WSI DICOM and extract anatomical metadata describing the sampled organ.
+    \item Identify radiology studies for the same patient and body region, based on DICOM fields such as \texttt{PatientID} and \texttt{BodyPartExamined}.
+    \item Run TotalSegmentator on the radiology volume to obtain organ specific segmentations.
+    \item Convert the resulting NIfTI masks into DICOM SEG objects that reference the original radiology images.
+    \item Upload the segmentation objects to PACS and verify their visibility in OHIF.
+\end{enumerate}
+
+The outputs of this pipeline are consumed directly by the split viewer, which renders overlay boxes on top of the segmented regions and associates them with links to pathology data.
+
+\section{Project Milestones}
+\label{sec:milestones}
+
+In addition to the fine grained phase wise description, the project reached several key milestones\index{milestones} that mark major technical achievements and transitions. These milestones provide a high level view of progress over the reporting period.
+
+\subsection{Milestone M1: Baseline Infrastructure and Synthetic Dataset (end of April 2025)}
+
+By the end of April 2025, the following conditions were met:
+\begin{itemize}
+    \item A fully functioning local dcm4chee PACS instance was deployed and accessible.
+    \item OHIF and SLIM were running in a containerized environment and could connect to PACS.
+    \item A synthetic DICOM dataset spanning radiology like and pathology like images with shared identifiers was generated and ingested.
+    \item Basic split viewer scaffolding in React was operational, embedding both OHIF and SLIM side by side.
+\end{itemize}
+This milestone established the baseline technical environment for all subsequent work.
+
+\subsection{Milestone M2: Split Viewer Prototype with Real Fused Data (end of June 2025)}
+
+By late June 2025, the system had progressed to:
+\begin{itemize}
+    \item Integration of a fused MRI histopathology dataset into PACS.
+    \item Generation and visualization of overlays derived from fusion annotations on top of MRI slices in OHIF.
+    \item A split viewer capable of displaying synthetic and real data across radiology and pathology panes.
+    \item NGINX based deployment that exposed PACS, OHIF, and the split viewer under a unified endpoint.
+\end{itemize}
+This milestone demonstrated that the architecture could support realistic multimodal scenarios, beyond synthetic data.
+
+\subsection{Milestone M3: Dynamic Overlays and Interactive Linking (end of September 2025)}
+
+By the end of September 2025, the user facing interaction model was in place:
+\begin{itemize}
+    \item Overlays over segmentation masks were made dynamic and color agnostic, remaining aligned under pan and zoom.
+    \item Clickable overlay regions were linked to corresponding pathology WSIs, opening SLIM in the right pane.
+    \item The split viewer prototype was stabilized through regression testing on both synthetic and fused datasets.
+\end{itemize}
+This milestone marks the point at which the system provided a coherent interactive radiology pathology exploration experience.
+
+\subsection{Milestone M4: Automated Pipeline Closure (end of October 2025)}
+
+By late October 2025, the automated processing pipeline reached end to end functionality:
+\begin{itemize}
+    \item WSI DICOM metadata were used to infer organ level context for each case.
+    \item Matching radiology studies were queried from PACS and segmented using TotalSegmentator.
+    \item NIfTI masks were converted into DICOM SEG series and uploaded back into PACS.
+    \item The split viewer could display these automatically generated segmentations as overlays and interactive regions.
+\end{itemize}
+This milestone closed the loop from pathology input to radiology segmentations and interactive visualization.
+
+\subsection{Milestone M5: Manuscript Draft and Kaapana Integration (end of December 2025)}
+
+By the end of December 2025, the project had reached:
+\begin{itemize}
+    \item A near submission ready manuscript describing the framework, pipeline, and initial evaluations.
+    \item Successful deployment of Kaapana on a local workstation.
+    \item Integration of the split viewer into Kaapana as a service, with aligned data identifiers.
+    \item End to end demonstrations in which Kaapana managed datasets processed by the pipeline and visualized in the split viewer.
+\end{itemize}
+This final milestone demonstrated both scientific communication of the work and its readiness for platform level integration.
+
+\section{Phase wise Work Description}
+\label{sec:phases}
+
+The following subsections describe the work chronologically in phases of one to two weeks. Date ranges are approximate but reflect the actual temporal structure of the project. Many of the phases contribute directly to the milestones summarized in Section~\ref{sec:milestones}.
+
+\subsection*{Phase 1 (15 March 2025 to 23 March 2025): Onboarding and Access Provisioning}
+
+The first phase focused on institutional onboarding and gaining access to the necessary technical resources. This included:
+
+\begin{itemize}
+    \item Completion of general orientation and mandatory trainings.
+    \item Registration with IT services and the clinical research infrastructure.
+    \item Request and configuration of user accounts for servers, VPN, and code repositories.
+    \item Initial literature review on DICOM, WSI formats, and existing radiology pathology integration efforts.
+\end{itemize}
+
+A key outcome of this phase was a clear understanding of the IT landscape, which constraints applied to local versus remote deployments, and how research data had to be handled.
+
+\subsection*{Phase 2 (24 March 2025 to 31 March 2025): Environment Setup and Reproduction of Prior Work}
+
+Building on the access obtained in Phase 1, this phase focused on re establishing the prototype I had built earlier for the interview, now on institutional hardware:
+
+\begin{itemize}
+    \item Installation and configuration of a local dcm4chee instance.
+    \item Deployment of OHIF and SLIM in containerized form.
+    \item Recreation of the DICOM to JPEG conversion system used previously for basic testing.
+    \item Validation that simple radiology and pathology test cases could be loaded in OHIF and SLIM respectively.
+\end{itemize}
+
+This work ensured a reproducible baseline environment and familiarized me with institution specific networking and container orchestration conventions. It contributed directly to Milestone M1.
+
+\subsection*{Phase 3 (1 April 2025 to 10 April 2025): DICOM Exploration and Synthetic Dataset Design}
+
+The focus of this phase was to deepen understanding of DICOM and to design a synthetic dataset suitable for linked radiology pathology experiments:
+
+\begin{itemize}
+    \item Systematic inspection of DICOM tags using tools such as \texttt{dcmdump} and OHIF metadata views.
+    \item Identification of key fields for linkage, such as \texttt{PatientID}, \texttt{StudyInstanceUID}, \texttt{SeriesInstanceUID}, and body region descriptors.
+    \item Design of a synthetic patient model in which one patient has both a volumetric radiology series and one or more pathology images representing the same anatomical site.
+    \item Planning of how to generate such datasets using PI DICOM or equivalent libraries.
+\end{itemize}
+
+By the end of this phase, I had a clear specification for synthetic DICOM data that could be used to test linking logic without being constrained by the availability of real fused datasets. This was a prerequisite for Milestone M1.
+
+\subsection*{Phase 4 (11 April 2025 to 20 April 2025): Synthetic Data Generation and PACS Ingestion}
+
+In this phase the synthetic dataset specification was implemented:
+
+\begin{itemize}
+    \item Implementation of Python scripts using PI DICOM to generate radiology like and pathology like DICOM instances.
+    \item Ensuring consistent use of identifiers across modalities so that the PACS would see them as belonging to the same patient and study.
+    \item Upload of the generated instances into dcm4chee using DICOM C STORE or DICOMweb STOW.
+    \item Verification via QIDO queries and OHIF that the synthetic radiology data were recognized as proper series and could be displayed.
+    \item Exploration of how pathology like images appeared in OHIF and SLIM given their DICOM encoding.
+\end{itemize}
+
+This synthetic dataset became the primary testbed for early experiments with multi viewer coordination and completed one of the key elements of Milestone M1.
+
+\subsection*{Phase 5 (21 April 2025 to 30 April 2025): Split Viewer Skeleton and Embedding of OHIF and SLIM}
+
+Having established working viewers and synthetic data, I implemented a first split viewer shell:
+
+\begin{itemize}
+    \item Creation of a React application scaffold that defines a two pane layout.
+    \item Embedding OHIF and SLIM as \texttt{iframe} elements, initially with static URLs.
+    \item Design of a simple routing mechanism in the shell to accept parameters such as \texttt{patientId} and \texttt{studyInstanceUid} from the URL.
+    \item Prototyping of functions that translate shell level parameters into appropriate viewer URLs pointing to the PACS.
+\end{itemize}
+
+The result at this stage was a static but functional split screen, where both viewers could render content for the same patient when configured manually. This completed the viewer related part of Milestone M1.
+
+\subsection*{Phase 6 (1 May 2025 to 10 May 2025): Dynamic Parameterization and Metadata Panels}
+
+Phase 6 concentrated on making the split viewer more dynamic and informative:
+
+\begin{itemize}
+    \item Implementation of components in React to query dcm4chee for the list of available patients and studies via QIDO.
+    \item Construction of a simple study selection panel that allows users to choose a patient and study, updating the URLs of OHIF and SLIM accordingly.
+    \item Introduction of a metadata sidebar showing key DICOM fields for the current study, aiding debugging and comprehension.
+    \item Refactoring of URL construction logic to keep it maintainable and to support future extension to series and instances.
+\end{itemize}
+
+At this point, the split viewer supported interactive study selection and propagated choices consistently to both panes. This phase prepared the system for integration with real data under Milestone M2.
+
+\subsection*{Phase 7 (11 May 2025 to 20 May 2025): Internal Presentation Preparation and Code Hardening}
+
+The goal of this phase was to prepare an internal presentation and harden the code for demonstration:
+
+\begin{itemize}
+    \item Preparation of slides describing the motivation, architecture, and early prototype of the split viewer.
+    \item Execution of multiple demonstration runs to identify edge cases and stability issues.
+    \item Introduction of basic error handling in the React application, including user friendly messages for failed PACS queries.
+    \item Refinement of logging to capture viewer launch parameters and PACS responses for troubleshooting.
+\end{itemize}
+
+The internal presentation validated the conceptual direction and yielded feedback used in subsequent phases.
+
+\subsection*{Phase 8 (21 May 2025 to 31 May 2025): Dataset Survey and Initial Segmentation Experiments}
+
+This phase focused on data and algorithms:
+
+\begin{itemize}
+    \item Survey of publicly available datasets that include both radiology and pathology, as well as internal resources where permitted.
+    \item Detailed evaluation of at least one candidate dataset in terms of modality composition, case counts, and metadata consistency.
+    \item Initial experiments with pre trained segmentation models on MRI data to generate organ and lesion masks.
+    \item Exploration of how such segmentations could be encoded in DICOM SEG and visualized in OHIF.
+\end{itemize}
+
+The outcome was a clearer understanding of which datasets were suitable for proof of concept versus genuine multimodal linkage and set the stage for Milestone M2.
+
+\subsection*{Phase 9 (1 June 2025 to 10 June 2025): Identification and Acquisition of Fused MRI Histopathology Dataset}
+
+Based on Phase 8, a fused dataset combining MRI and histopathology was identified as particularly relevant:
+
+\begin{itemize}
+    \item Detailed review of the dataset documentation to understand patient selection, imaging protocols, and fusion methodology.
+    \item Acquisition and local organization of the data for approximately ten patients, including DICOM volumes and alignment information.
+    \item Verification of DICOM compliance and correction of minor inconsistencies where needed.
+    \item Planning of how to map the provided fusion information into overlays suitable for OHIF.
+\end{itemize}
+
+This phase established the real data foundation for later overlay work and was a core component of Milestone M2.
+
+\subsection*{Phase 10 (11 June 2025 to 20 June 2025): Integration of Fused Dataset into PACS and Overlay Generation}
+
+The primary focus was to integrate the fused dataset into dcm4chee and to generate overlays:
+
+\begin{itemize}
+    \item Import of MRI series into PACS with appropriate patient and study identifiers.
+    \item Ingestion or conversion of fusion related annotations, often provided as MATLAB structures, to a neutral representation.
+    \item Implementation of scripts to convert fusion outputs into bounding boxes or masks for relevant MRI slices.
+    \item Visualization of these overlays in OHIF, initially using a custom extension that reads overlay descriptors from sidecar files.
+\end{itemize}
+
+This allowed qualitative checks that fused information aligned spatially with the radiology images as expected and helped to complete Milestone M2.
+
+\subsection*{Phase 11 (21 June 2025 to 30 June 2025): System Hardening and NGINX Based Deployment}
+
+Having integrated real data and overlays, I focused on system level reliability:
+
+\begin{itemize}
+    \item Debugging PACS connectivity issues, including tuning of QIDO query parameters and timeouts.
+    \item Configuration of NGINX as a reverse proxy serving dcm4chee, OHIF, and the split viewer under a unified domain.
+    \item Implementation of an autoload behavior whereby a default patient study is opened when the split viewer is launched.
+    \item Regression testing of the synthetic and fused datasets in the new deployment configuration.
+\end{itemize}
+
+At the end of this phase the system was robust enough to serve as a basis for advanced overlay functionality and the conditions of Milestone M2 were satisfied.
+
+\subsection*{Phase 12 (1 July 2025 to 10 July 2025): Initial Overlay over Segmentation Implementation}
+
+This phase marks the beginning of focused front end work on overlay mechanisms:
+
+\begin{itemize}
+    \item Design of an overlay layer drawn on top of existing segmentation masks in OHIF.
+    \item Implementation of logic that detects segmented regions, initially those rendered in red, and draws a higher level bounding box overlay for user interaction.
+    \item Experimentation with visual encodings that clearly separate the segmentation mask from the clickable overlay region.
+    \item Establishment of a data structure that associates each overlay region with metadata and potential links.
+\end{itemize}
+
+Functionally, users could now see an additional overlay over the red segmentation regions, though alignment behavior during navigation still needed improvement.
+
+\subsection*{Phase 13 (11 July 2025 to 20 July 2025): Overlay Alignment and Interaction Design}
+
+The goal of this phase was to make overlays behave correctly under user interaction:
+
+\begin{itemize}
+    \item Analysis of how OHIF manages image coordinates, viewport transformations, and camera state.
+    \item Updating the overlay implementation to recompute positions in response to pan and zoom events.
+    \item Identification and documentation of failure cases where overlays could lag behind or drift relative to the segmentation.
+    \item Design of interaction patterns such as hover effects and click actions while considering usability and performance.
+\end{itemize}
+
+Although some issues remained, the overlay layer became significantly more usable and aligned more consistently with the underlying images.
+
+\subsection*{Phase 14 (21 July 2025 to 31 July 2025): Early Pipeline Prototyping}
+
+In parallel with overlay refinement, I began prototyping elements of the future automation pipeline:
+
+\begin{itemize}
+    \item Selection of tools for segmentation (TotalSegmentator) and DICOM SEG conversion (for example dcmqi).
+    \item Prototyping of scripts to convert radiology DICOM series into NIfTI volumes suitable for TotalSegmentator.
+    \item Execution of TotalSegmentator on selected cases and visual inspection of resulting segmentations.
+    \item Drafting of a control flow for a pipeline that would integrate these steps end to end.
+\end{itemize}
+
+These prototypes provided empirical feedback on runtime characteristics and segmentation quality, which informed pipeline design.
+
+\subsection*{Phase 15 (1 August 2025 to 10 August 2025): Reduced Activity and Pipeline Design Documentation}
+
+Due to emerging health issues, hands on work was reduced during this phase, but progress continued at the design level:
+
+\begin{itemize}
+    \item Documentation of the intended pipeline as a sequence diagram and flowchart.
+    \item Clarification of error handling requirements, such as what should happen if segmentation fails or metadata is incomplete.
+    \item Identification of minimal interfaces between the pipeline and the PACS and viewer components.
+\end{itemize}
+
+This documentation proved valuable in later phases when implementation resumed after recovery.
+
+\subsection*{Phase 16 (11 August 2025 to 20 August 2025): Travel and Operation}
+
+In this phase I travelled to India for a medical operation:
+
+\begin{itemize}
+    \item On site development was paused due to surgery and immediate recovery.
+    \item Limited asynchronous communication with the team continued as health permitted, primarily for clarifying design points and planning post recovery priorities.
+\end{itemize}
+
+This phase explains a temporary reduction in technical output but did not change the long term objectives.
+
+\subsection*{Phase 17 (21 August 2025 to 31 August 2025): Remote Work and Preparation for Prototype Completion}
+
+Once recovery allowed, I resumed work remotely from India:
+
+\begin{itemize}
+    \item Review of existing code and open issues related to overlays and pipeline integration.
+    \item Preparation of tasks that could be executed quickly upon returning on site, with an emphasis on prototype stabilization.
+    \item Minor corrections to documentation and small code fixes that did not require direct access to institutional infrastructure.
+\end{itemize}
+
+This phase served as a bridge toward full productivity in September.
+
+\subsection*{Phase 18 (1 September 2025 to 10 September 2025): Full Time Return and Dynamic Overlay Fixes}
+
+Back on site, the first priority was completion of dynamic overlay behavior:
+
+\begin{itemize}
+    \item Systematic testing of overlay alignment under various navigation patterns (multi slice scrolling, pan, zoom, windowing).
+    \item Generalization of color detection so that overlays can be generated on segmentation regions rendered in any color, not only red.
+    \item Refactoring of overlay rendering code to ensure that updates are triggered reliably when the viewport changes.
+    \item Resolution of bugs where overlays persisted in the wrong position after the underlying segmentation left the field of view.
+\end{itemize}
+
+By the end of this phase, overlays were both color agnostic and dynamically consistent with the image navigation state, contributing to Milestone M3.
+
+\subsection*{Phase 19 (11 September 2025 to 20 September 2025): Interactive Linking to SLIM}
+
+Having robust overlays, the next step was to connect them to pathology data:
+
+\begin{itemize}
+    \item Definition of a mapping between segmentation regions in radiology and the corresponding pathology WSIs, based on patient identifiers and anatomical descriptors.
+    \item Extension of overlay metadata structures to include links that identify the target pathology study.
+    \item Implementation of click handlers so that selecting an overlay region in OHIF triggers loading of the linked pathology study in the SLIM pane.
+    \item Execution of user like test scenarios to evaluate the interaction from the perspective of a radiologist or pathologist.
+\end{itemize}
+
+This phase delivered the core user facing feature: clicking on a region in radiology opens the relevant pathology context, enabling linked multimodal exploration and completing Milestone M3.
+
+\subsection*{Phase 20 (21 September 2025 to 30 September 2025): Prototype Stabilization and Regression Testing}
+
+This phase focused on making the entire prototype reliable:
+
+\begin{itemize}
+    \item Comprehensive regression testing across synthetic datasets and the fused MRI histopathology data.
+    \item Consolidation of configuration files, including environment variables for PACS endpoints and viewer URLs.
+    \item Documentation of installation and usage steps so that the system can be reproduced by others.
+    \item Identification and resolution of remaining edge cases, such as patients without corresponding pathology or segmentation.
+\end{itemize}
+
+At the conclusion of September, the prototype was functionally complete and stable, satisfying all conditions of Milestone M3.
+
+\subsection*{Phase 21 (1 October 2025 to 10 October 2025): Implementation of Automated Pipeline Core}
+
+The first October phase implemented the core of the automated pipeline:
+
+\begin{itemize}
+    \item Implementation of a module that, given a WSI DICOM instance, extracts organ level information from its metadata.
+    \item Implementation of queries over PACS to retrieve radiology studies for the same patient and matching body region.
+    \item Wrapper scripts that call TotalSegmentator on selected radiology series to generate organ segmentations.
+    \item Management of intermediate data (NIfTI volumes and masks) in a structured directory layout.
+\end{itemize}
+
+This established the end to end path from WSI derived metadata to segmented radiology volumes and formed the first half of Milestone M4.
+
+\subsection*{Phase 22 (11 October 2025 to 20 October 2025): DICOM SEG Conversion and PACS Upload}
+
+The second October phase completed the loop back into PACS:
+
+\begin{itemize}
+    \item Integration of DICOM SEG conversion tools such as dcmqi, mapping NIfTI masks to DICOM SEG objects referencing the original radiology images.
+    \item Population of segmentation labels and codes in accordance with DICOM standards and TotalSegmentator label semantics.
+    \item Automated STOW upload of the created DICOM SEG series into dcm4chee.
+    \item Validation in OHIF that segmentations appeared as expected and could be toggled on and off.
+\end{itemize}
+
+After this phase, radiology segmentations produced by the pipeline were indistinguishable from manually curated DICOM SEG objects from the viewer perspective.
+
+\subsection*{Phase 23 (21 October 2025 to 31 October 2025): Pipeline Robustness and Integration with Viewers}
+
+The last October phase focused on robustness and viewer integration:
+
+\begin{itemize}
+    \item Implementation of retry and error handling strategies in the pipeline, including logging of failure modes.
+    \item Parameterization of the pipeline so that it can be run for individual patients or batches.
+    \item Integration of pipeline outputs with the overlay system by ensuring consistent naming and identification of organ specific segmentations.
+    \item Execution of several end to end runs from WSI to interactive split viewer, measuring execution times and resource usage.
+\end{itemize}
+
+The pipeline was now mature enough to serve as the backbone for the automated part of the framework, and Milestone M4 was fully achieved.
+
+\subsection*{Phase 24 (1 November 2025 to 10 November 2025): Manuscript Introduction and Background}
+
+With the system stable, attention shifted to scientific documentation:
+
+\begin{itemize}
+    \item Drafting of the manuscript introduction, clearly stating the problem, motivation, and contributions.
+    \item Writing of a background section covering DICOM, WSI, existing viewer technologies, and related work on radiology pathology integration.
+    \item Construction of conceptual figures for the architecture and problem setting.
+\end{itemize}
+
+These sections anchored the manuscript in the existing literature and framed the novelty of the work.
+
+\subsection*{Phase 25 (11 November 2025 to 20 November 2025): Methods and System Description in Manuscript}
+
+The second November phase focused on methods:
+
+\begin{itemize}
+    \item Detailed description of the system architecture, including PACS, viewer stack, and pipeline.
+    \item Formalization of the pipeline in the manuscript, including the flowchart that traces WSI derived organ detection to radiology segmentation and DICOM SEG creation.
+    \item Specification of implementation details such as technologies used, parameter settings, and hardware environment.
+\end{itemize}
+
+During this period, I also continuously verified that the described behavior matched the actual system.
+
+\subsection*{Phase 26 (21 November 2025 to 30 November 2025): Experimental Description and Finalization of Manuscript Draft}
+
+This phase advanced the manuscript toward a complete draft:
+
+\begin{itemize}
+    \item Description of qualitative and quantitative experiments, including representative cases of the fused dataset.
+    \item Selection and creation of screenshots illustrating the split viewer, overlays, and pipeline outputs.
+    \item Iterative revision of the full manuscript with co authors, addressing comments and clarifying technical explanations.
+    \item Parallel minor bug fixing in the system to keep it aligned with manuscript claims and figures.
+\end{itemize}
+
+By the end of November, the manuscript was in a near submission ready state, covering the scientific narrative underlying Milestones M1 to M4 and building toward Milestone M5.
+
+\subsection*{Phase 27 (1 December 2025 to 10 December 2025): Kaapana Architecture Study and Local Deployment}
+
+The first December phase turned to the Kaapana platform:
+
+\begin{itemize}
+    \item Study of Kaapana documentation and existing deployments to understand its architecture and workflow engine.
+    \item Local deployment of Kaapana on the workstation, following recommended container orchestration practices.
+    \item Verification of core Kaapana functionalities such as data ingestion, pipeline execution, and monitoring.
+\end{itemize}
+
+This provided the basis for integrating the split viewer and pipeline into a broader platform context and contributed to Milestone M5.
+
+\subsection*{Phase 28 (11 December 2025 to 20 December 2025): Integration of Split Viewer into Kaapana}
+
+The next step was to connect the developed components with Kaapana:
+
+\begin{itemize}
+    \item Packaging of the split viewer as a service that can be deployed within Kaapana.
+    \item Configuration of ingress and routing rules so that Kaapana could expose the viewer through its interface.
+    \item Mapping of Kaapana datasets and workflows to the PACS used by the viewer, ensuring consistent identifiers.
+\end{itemize}
+
+At this stage, users of Kaapana could launch the split viewer in a way that was consistent with other platform capabilities.
+
+\subsection*{Phase 29 (21 December 2025 to 31 December 2025): Integration Evaluation and Future Planning}
+
+The final phase evaluated the integration and planned next steps:
+
+\begin{itemize}
+    \item Execution of end to end scenarios where data managed by Kaapana were processed by the pipeline and visualized in the split viewer.
+    \item Identification of limitations and opportunities for tighter coupling, for example invoking the pipeline as a Kaapana workflow.
+    \item Drafting of a roadmap for future work, including scalability improvements, user studies, and extension to additional modalities.
+\end{itemize}
+
+This closed the 2025 activity cycle with a coherent set of technical achievements and a clear outlook, completing Milestone M5.
+
+\section{Synthesis of Technical Contributions}
+\label{sec:contrib}
+
+Across the phases, the work delivered several technical contributions:
+
+\begin{itemize}
+    \item A reproducible multi component DICOM infrastructure combining dcm4chee, OHIF, and SLIM, with robust NGINX based routing.
+    \item A split viewer application in React that orchestrates two independent viewers and provides study selection and metadata views.
+    \item Dynamic overlays over segmentation masks that are color agnostic and correctly synchronized with viewport transformations.
+    \item Interactive linkage from radiology to pathology using clickable overlay regions that open corresponding cases in SLIM.
+    \item An automated pipeline from WSI derived organ identification to radiology segmentation and DICOM SEG creation and upload.
+    \item Initial integration of the viewer and workflows into the Kaapana platform, enabling future production grade deployments.
+\end{itemize}
+
+These contributions support multimodal reasoning by clinicians and provide a technical foundation for further research on radiology pathology fusion.
+
+\section{Skills and Lessons Learned}
+\label{sec:skills}
+
+The project significantly strengthened my skills in several areas:
+
+\begin{itemize}
+    \item \textbf{Medical imaging technology}: DICOM and DICOM SEG, WSI DICOM, PACS operations, and DICOMweb protocols.
+    \item \textbf{Software engineering}: React development, modular architecture design, error handling, and container based deployment.
+    \item \textbf{Image processing}: Use of TotalSegmentator and related tools, data conversion between DICOM and NIfTI, and handling of fused datasets.
+    \item \textbf{Systems integration}: Reverse proxy configuration, coordination of multiple services, and platform level integration with Kaapana.
+    \item \textbf{Scientific communication}: Preparation of internal presentations and co authoring of a publication style manuscript.
+\end{itemize}
+
+The periods of reduced availability due to health reasons also highlighted the importance of clear documentation and modular design so that progress can be resumed efficiently after interruptions.
+
+\section{Conclusion and Future Work}
+\label{sec:conclusion}
+
+This report has presented a detailed, phase wise account of the work carried out as a HEBE Student Research Assistant from March to December 2025. A DICOM based framework for bridging radiology and pathology was designed and implemented, featuring a split viewer with dynamic overlays and interactive linking, as well as an automated pipeline that turns WSI derived organ information into radiology segmentations and DICOM SEG objects.
+
+Future work can build on this foundation in several directions:
+\begin{itemize}
+    \item Extension to additional organs and modalities, including ultrasound and molecular imaging.
+    \item Quantitative evaluation of the framework in clinical or research workflows with real users.
+    \item Tight integration of the pipeline with Kaapana's workflow engine for scalable batch processing.
+    \item Exploration of learning based models that exploit the linked radiology pathology data enabled by the system.
+\end{itemize}
+
+Overall, the project demonstrates that a principled use of DICOM, combined with modern web technologies and open source tools, can substantially improve the technical basis for radiology pathology integration.
+
+\end{document}

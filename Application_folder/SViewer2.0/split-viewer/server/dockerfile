@@ -1,0 +1,53 @@
+# server/Dockerfile — CPU-only toolchain + Node server (uses Python venv)
+FROM --platform=linux/amd64 node:20-bookworm
+
+WORKDIR /app
+
+# System deps: tools & libs
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    curl ca-certificates wget unzip zip gnupg \
+    python3 python3-venv python3-pip \
+    dcm2niix \
+    libglib2.0-0 libsm6 libxext6 libxrender1 \
+ && rm -rf /var/lib/apt/lists/*
+
+# ---- dcmqi (itkimage2segimage) from official release ----
+ARG DCMQI_VER=1.3.4
+RUN mkdir -p /opt/dcmqi \
+ && wget -q -O /tmp/dcmqi.tar.gz "https://github.com/QIICR/dcmqi/releases/download/v${DCMQI_VER}/dcmqi-${DCMQI_VER}-linux.tar.gz" \
+ && tar -xzf /tmp/dcmqi.tar.gz -C /opt/dcmqi --strip-components=1 \
+ && ln -s /opt/dcmqi/bin/itkimage2segimage /usr/local/bin/itkimage2segimage \
+ && ln -s /opt/dcmqi/bin/segimage2itkimage /usr/local/bin/segimage2itkimage \
+ && rm -f /tmp/dcmqi.tar.gz
+
+# ---- Python venv + TotalSegmentator (CPU) ----
+RUN python3 -m venv /opt/venv
+ENV VIRTUAL_ENV=/opt/venv
+ENV PATH="/opt/venv/bin:${PATH}"
+
+# Upgrade pip inside venv and install packages there
+# NOTE: Correct package name is 'TotalSegmentator'
+RUN pip install --upgrade pip \
+ && pip install --no-cache-dir \
+      "torch>=2,<3" \
+      "TotalSegmentator>=2,<3" \
+      SimpleITK
+
+
+# ---- Node deps ----
+# Make sure package.json includes "unzipper" in dependencies.
+COPY split-viewer/server/package.json split-viewer/server/package-lock.json* ./
+RUN npm install --omit=dev
+
+# ---- App sources ----
+COPY split-viewer/server/server.js ./
+COPY split-viewer/server/data ./data
+
+# ---- Runtime env ----
+ENV PORT=3001
+ENV AET=DCM4CHEE
+ENV DCM4CHEE_BASE=http://arc:8080/dcm4chee-arc
+ENV ANATOMIC_MASTER_JSON=/app/data/dicom_anatomic_master.json
+
+EXPOSE 3001
+CMD ["node", "server.js"]
